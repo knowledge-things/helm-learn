@@ -6,7 +6,10 @@ wordpressUsername: kevin
 ## NOTE: Must contain key `wordpress-password`
 ## NOTE: When it's set, the `wordpressPassword` parameter is ignored
 ##
-existingSecret: custom-wp-credentials
+existingSecret: custom-wp-credentials 
+
+service:
+  type: NodePort
 
 autoscaling:
   enabled: true
