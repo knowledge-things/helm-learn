@@ -1,0 +1,16 @@
+# 1.Set the WordPress username
+# 2.Set the existingSecret parameter to the name of an existing secret containing WordPress credentials
+# 3.Set the replicaCount parameter to the desired number of replicas
+wordpressUsername: kevin
+## @param existingSecret Name of existing secret containing WordPress credentials
+## NOTE: Must contain key `wordpress-password`
+## NOTE: When it's set, the `wordpressPassword` parameter is ignored
+##
+existingSecret: custom-wp-credentials
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPU: 50
+  targetMemory: 50

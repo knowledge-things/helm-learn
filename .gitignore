@@ -1,0 +1,16 @@
+# Helm
+charts/*.tgz
+*.lock
+
+# Kubernetes
+*.secret.yaml
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# 临时文件
+*.tmp
