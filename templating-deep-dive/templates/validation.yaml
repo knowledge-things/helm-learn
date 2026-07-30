@@ -1,0 +1,7 @@
+{{- if and .Values.securityContext .Values.securityContext.enabled -}}
+{{ $_ := required "securityContext.runAsUser is required" .Values.securityContext.runAsUser}}
+{{ $_ := required "securityContext.fsGroup is required" .Values.securityContext.fsGroup}}
+{{- if eq (.Values.securityContext.runAsUser | int)  0 -}}
+{{- fail (dict "errorKey" "securityContext.runAsUser" "errorMessage" "Containers cannot run as root when securityContext.enabled is true" | toJson) -}}
+{{- end -}}
+{{- end -}}
