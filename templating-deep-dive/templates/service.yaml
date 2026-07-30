@@ -1,5 +1,6 @@
 {{- range $key, $svc := .Values.services | default dict}}
 ---
+# The value of the .: {{ . }}
 apiVersion: v1
 kind: Service
 metadata:
