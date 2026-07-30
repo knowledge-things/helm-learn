@@ -1,9 +1,9 @@
-{{- range $idx, $svc := .Values.services | default list}}
+{{- range $key, $svc := .Values.services | default dict}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "templating-deep-dive.fullname" $ }}-{{ $idx }}
+  name: {{ include "templating-deep-dive.fullname" $ }}-{{ $key }}
   labels:
     {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }}
 spec:

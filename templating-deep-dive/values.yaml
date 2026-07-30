@@ -22,11 +22,14 @@ containerPorts:
   http: 80
 
 ## Settings for the Nginx service
+## Service settings 
 ##
-## @param services[*].type The type of the Nginx service  
-## @param services[*].port The port of the Nginx service
+## @param services["*""].type The type of the Nginx service  
+## @param services["*""].port The port of the Nginx service
 services:
-  - type: ClusterIP
+  svc1:
+    type: ClusterIP
     port: 80
-  - type: NodePort
+  svc2:
+    type: NodePort
     port: 30007
