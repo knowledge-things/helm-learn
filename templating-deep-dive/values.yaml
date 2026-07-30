@@ -1,6 +1,10 @@
+## @param customName allows to set a custom resource name for the deployment and service
+##        Default to {{ .Release.Name }}-{{ .Chart.Name }}
+customName : "my-custom-release"
 # Replica count
 # Image, both name and tag
 # Service type and port
+environment: production
 
 ## #param replicaCount Number of Nginx replicas to deploy
 replicaCount: 3
