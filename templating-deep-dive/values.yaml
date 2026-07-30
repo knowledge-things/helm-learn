@@ -23,10 +23,10 @@ containerPorts:
 
 ## Settings for the Nginx service
 ##
-## @param service.enabled Whether to enable the Nginx service
-## @param service.type The type of the Nginx service  
-## @param service.port The port of the Nginx service
-service:
-  enabled: true
-  type: ClusterIP
-  port: 80
+## @param services[*].type The type of the Nginx service  
+## @param services[*].port The port of the Nginx service
+services:
+  - type: ClusterIP
+    port: 80
+  - type: NodePort
+    port: 30007

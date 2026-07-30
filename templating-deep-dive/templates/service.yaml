@@ -1,16 +1,17 @@
-{{ if .Values.service.enabled }}
+{{- range $idx, $svc := .Values.services | default list}}
+---
 apiVersion: v1
 kind: Service
 metadata:
-    name: {{ include "templating-deep-dive.fullname" . }}
-    labels:
-        {{- include "templating-deep-dive.selectorLabels" . | nindent 4 }}
+  name: {{ include "templating-deep-dive.fullname" $ }}-{{ $idx }}
+  labels:
+    {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }}
 spec:
-    type: {{ .Values.service.type }}
-    selector:
-        {{- include "templating-deep-dive.selectorLabels" . | nindent 4 }}
-    ports:
-        - protocol: TCP
-          port: {{ .Values.service.port }}
-          targetPort: {{ .Values.containerPorts.http }}
-{{ end }}
+  type: {{ $svc.type }}
+  selector:
+    {{- include "templating-deep-dive.selectorLabels" $ | nindent 4 }}
+  ports:
+    - protocol: TCP
+      port: {{ $svc.port }}
+      targetPort: {{ $.Values.containerPorts.http }}
+{{- end }}
