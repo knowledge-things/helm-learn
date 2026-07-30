@@ -3,7 +3,4 @@ kind: ConfigMap
 metadata:
   name: {{ include "accessing-files.fullname" . }}
 data:
-{{- range $path, $_ := .Files.Glob "files/*.properties" }}
-  {{ base $path }} : |-
-{{ $.Files.Get $path | indent 4 }}
-{{- end }}
+{{ (.Files.Glob "files/*.properties").AsConfig | indent 2}}
