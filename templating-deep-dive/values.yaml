@@ -15,6 +15,17 @@ replicaCount: 3
 image:
   name: nginx
   tag: "1.27.0"
+
+## Settings for the Nginx image
+##
+## @param securityContext.enabled Whether to enable security context for the Nginx container
+## @param securityContext.runAsUser The user ID to run the Nginx container as
+## @param securityContext.fsGroup The group ID to run the Nginx container as
+securityContext:
+  enabled: true
+  runAsUser: 1000
+  fsGroup: 2000
+
 ## Nginx container settings
 ##
 ## @param containerPort The port of the Nginx container
