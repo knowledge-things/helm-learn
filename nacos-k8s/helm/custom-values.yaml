@@ -1,0 +1,37 @@
+
+global:
+  mode: cluster
+
+nacos:
+  replicaCount: 3
+  authToken: "VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg5"
+  identityKey: "serverIdentity"
+  identityValue: "fd09a046429ea763cc58a9a19f44caba"  
+  storage:
+    type: "mysql"
+    db:
+      host: 120.48.18.190
+      name: nacos
+      port: 3306
+      username: nacos
+      param: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false
+
+mysql:
+  existingSecret: nacos-db-secret
+
+persistence:
+  enabled: true
+  data:
+    accessModes:
+      - ReadWriteOnce
+    storageClassName: standard
+
+ingress:
+  enabled: true
+  apiVersion: networking.k8s.io/v1
+  ingressClassName: nginx
+
+  hosts:
+    - host: nacos.local
+
+  tls: []
