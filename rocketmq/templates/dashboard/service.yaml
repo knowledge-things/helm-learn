@@ -1,0 +1,26 @@
+{{- if .Values.dashboard.enabled -}}
+{{- with .Values.dashboard.service -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rocketmq-dashboard.fullname" $ }}
+  labels:
+    {{- include "rocketmq-dashboard.labels" $ | nindent 4 }}
+    component: dashboard
+spec:
+  ports:
+  - name: http
+    port: {{ .httpPort | default $.Values.dashboard.containerPort }}
+    protocol: TCP
+    targetPort: http
+    {{- if and (eq .type "NodePort") .nodePort }}
+    nodePort: {{ .nodePort }}
+    {{- end }}
+  selector:
+    {{- include "rocketmq-dashboard.selectorLabels" $ | nindent 4 }}
+    component: dashboard
+  {{- with .type }}
+  type: {{ . | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}

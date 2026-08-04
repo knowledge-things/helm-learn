@@ -1,0 +1,71 @@
+{{- with .Values.dashboard -}}
+{{- if .enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rocketmq-dashboard.fullname" $ | quote }}
+  labels:
+    {{- include "rocketmq-dashboard.labels" $ | nindent 4 }}
+spec:
+  replicas: {{ .replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "rocketmq-dashboard.selectorLabels" $ | nindent 6 }}
+      component: dashboard
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/dashboard/configmap.yaml") $ | sha256sum }}
+      labels:
+        {{- include "rocketmq-dashboard.selectorLabels" $ | nindent 8 }}
+        component: dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: {{ printf "%s:%s" .image.repository .image.tag | quote }}
+        imagePullPolicy: {{ .image.pullPolicy | default "IfNotPresent" }}
+        env:
+        - name: JAVA_OPTS
+          value: {{ printf "-XX:MaxHeapSize=%s -Drocketmq.namesrv.addr=%s:9876" .jvm.maxHeapSize (include "rocketmq-nameserver.fullname" $) | quote }}
+        {{- if .auth.enabled }}
+        - name: rocketmq.config.loginRequired
+          value: "true"
+        - name: rocketmq.config.dataPath
+          value: {{ include "rocketmq-dashboard.dataPath" $ | quote }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .containerPort }}
+          protocol: TCP
+        resources:
+          {{- toYaml .resources | nindent 10 }}
+        {{- with .livenessProbe }}
+        livenessProbe:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- with .readinessProbe }}
+        readinessProbe:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+        {{- if .auth.enabled }}
+        volumeMounts:
+        - mountPath: "{{ include "rocketmq-dashboard.dataPath" $ }}/users.properties"
+          name: dashboard-cm
+          subPath: users.properties
+        {{- end }}
+      terminationGracePeriodSeconds: {{ .terminationGracePeriodSeconds | default 5 }}
+      {{- if .auth.enabled }}
+      volumes:
+      - configMap:
+          items:
+          - key: users.properties
+            path: users.properties
+          name: {{ include "rocketmq-dashboard.configmap.fullname" $ }}
+        name: dashboard-cm
+      {{- end }}
+      {{- with .nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
+{{- end }}

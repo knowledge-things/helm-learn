@@ -1,0 +1,20 @@
+{{- with .Values.dashboard }}
+{{- if and .enabled .auth .auth.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "rocketmq-dashboard.configmap.fullname" $ | quote }}
+  labels:
+    {{- include "rocketmq-dashboard.labels" $ | nindent 4 }}
+data:
+  {{- if .auth.users }}
+  users.properties: |
+    {{- range .auth.users }}
+    {{ .name }}={{ .password }}{{ if .isAdmin }},1{{ end }}
+    {{- end }}
+  {{- else }}
+  users.properties: |
+    admin=admin,1
+  {{- end }}
+{{- end }}
+{{- end }}

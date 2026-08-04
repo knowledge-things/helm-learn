@@ -240,3 +240,63 @@ controller:
   persistence:
     enabled: false
     size: 20Gi
+
+
+dashboard:
+  enabled: true
+  replicaCount: 1
+
+  nameOverride: "dashboard"
+  fullnameOverride: ""
+
+  image:
+    repository: "apacherocketmq/rocketmq-dashboard"
+    tag: "2.1.0"
+    pullPolicy: IfNotPresent
+
+  containerPort: 8082
+
+  auth:
+    enabled: true
+    users:
+      - name: admin
+        password: admin
+        isAdmin: true
+      # - name: user01
+      #   password: userPass
+
+  jvm:
+    maxHeapSize: 600M
+
+  resources:
+    limits:
+      cpu: 1
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 1Gi
+
+  readinessProbe:
+    failureThreshold: 6
+    httpGet:
+      path: /
+      port: http
+  livenessProbe: {}
+
+  service:
+    type: ClusterIP
+    # nodePort: 31007
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # nginx.ingress.kubernetes.io/whitelist-source-range: 10.0.0.0/8
+    hosts:
+      - host: rocketmq-dashboard.example.com
+    tls: []
+    #  - secretName: example-tls
+    #    hosts:
+    #      - rocketmq-dashboard.example.com
+
+  nodeSelector: {}
