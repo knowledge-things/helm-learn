@@ -16,3 +16,5 @@ charts/*.tgz
 *.tmp
 
 *.tgz
+
+.env
