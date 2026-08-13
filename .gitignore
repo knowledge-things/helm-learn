@@ -18,3 +18,9 @@ charts/*.tgz
 *.tgz
 
 .env
+
+# Kubernetes secrets
+secret.yaml
+secrets/
+*.secret.yaml
+*.secret.yml
