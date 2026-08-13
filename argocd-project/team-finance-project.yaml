@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: finance-project
+  namespace: argo-cd
+spec:
+  description: Project for Team Finance with security guadrails
+
+  sourceRepos:
+    - 'https://github.com/knowledge-things/argocd-example-apps.git'
+    
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: finance
+
+  clusterResourceWhitelist:
+    - group: ""
+      kind: "*"
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
