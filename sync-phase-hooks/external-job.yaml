@@ -1,0 +1,24 @@
+# 注意：此 Job 与 ArgoCD Application 中的同步任务没有关联。
+# ArgoCD 只会识别和执行定义在源仓库中的 Hooks，即：
+# https://github.com/knowledge-things/argocd-example-apps.git
+# 本文件仅作为本地示例参考，不会被 ArgoCD 自动触发。
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: external-job
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration
+          image: busybox
+          command:
+            - "sh"
+            - "-c"
+            - "echo 'Running db mirgation...'; sleep 10; echo 'Done!'"
+  
