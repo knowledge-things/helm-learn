@@ -22,4 +22,4 @@ spec:
           image: lmacademy/simple-color-app:1.0.0
           env:
             - name: APP_COLOR
-              value: 'blue'
+              value: 'orange'
