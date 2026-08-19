@@ -1,0 +1,57 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-gateway
+  namespace: gateway-lab
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: rollout-gateway
+  template:
+    metadata:
+      labels:
+        app: rollout-gateway
+    spec:
+      containers:
+        - name: rollout-gateway
+          image: lmacademy/simple-color-app:1.0.0
+          env:
+            - name: APP_COLOR
+              value: 'purple'
+  strategy:
+    canary:
+      canaryService: rollout-gateway-canary
+      stableService: rollout-gateway-stable
+      dynamicStableScale: true
+      trafficRouting:
+        plugins:
+          argoproj-labs/gatewayAPI:
+            httpRoute: rollout-gateway-route
+            namespace: gateway-lab
+        managedRoutes:
+          - name: qa-override
+      steps:
+        - setWeight: 1
+        - pause:
+            duration: 20s
+        - setCanaryScale:
+            weight: 40
+        - setHeaderRoute:
+            name: qa-override
+            match:
+              - headerName: x-canary
+                headerValue:
+                  exact: "true"
+        - pause: {}
+        - setWeight: 30
+        - pause: {}
+        - setWeight: 40
+        - pause: 
+            duration: 20s
+        - setWeight: 60
+        - pause: 
+            duration: 20s
+        - setWeight: 80
+        - pause: 
+            duration: 20s
